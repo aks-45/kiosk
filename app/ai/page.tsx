@@ -201,7 +201,8 @@ function AIChatContent() {
           {
             role: "model",
             content:
-              "AI service is temporarily unavailable. Please check your network or API key and try again.",
+              err.message ||
+              "AI service is temporarily unavailable. Please check your API key and try again.",
             isError: true,
           },
         ]);
