@@ -122,16 +122,23 @@ export class GeminiAIService implements AIService {
     message: string
   ): Promise<string> {
     // Build proper multi-turn contents array
-    const contents = history.map((h) => ({
+    const rawContents = history.map((h) => ({
       role: h.role === "user" ? "user" : "model",
       parts: [{ text: h.content }],
     }));
 
     // Add the current user message
-    contents.push({
+    rawContents.push({
       role: "user",
       parts: [{ text: message }],
     });
+
+    // Gemini API requires the first turn to be 'user'
+    while (rawContents.length > 0 && rawContents[0].role !== "user") {
+      rawContents.shift();
+    }
+
+    const contents = rawContents.length > 0 ? rawContents : [{ role: "user", parts: [{ text: message }] }];
 
     // Call Gemini with the general-purpose system instruction
     return await this.callGemini(SYSTEM_INSTRUCTION, contents, {

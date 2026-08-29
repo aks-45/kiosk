@@ -17,4 +17,4 @@ services:
       - key: DATABASE_URL
         value: file:./dev.db
       - key: GEMINI_API_KEY
-        value: AIzaSyDj1qT4KuVVFnYknhUCnNVLVLkCQYKmgdg
+        sync: false
