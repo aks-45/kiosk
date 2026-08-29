@@ -1,0 +1,54 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model DemoUser {
+  id               String         @id @default(uuid())
+  customerId       String         @unique // e.g. "SBK001"
+  pinHash          String         // e.g. "1234"
+  name             String         // "Demo User"
+  balance          Float          // Fictional main balance
+  savingsBalance   Float          // Fictional savings
+  pendingBalance   Float          // Fictional pending
+  createdAt        DateTime       @default(now())
+  transactions     Transaction[]
+  sessions         KioskSession[]
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  userId      String
+  user        DemoUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date        DateTime @default(now())
+  description String
+  category    String   // "Salary", "Bills", "Groceries", "Entertainment", "Loans"
+  amount      Float
+  type        String   // "CREDIT" or "DEBIT"
+}
+
+model KioskSession {
+  id          String   @id @default(uuid())
+  kioskId     String   @default("SBK001")
+  sessionId   String   @unique // e.g. "SBK001-XXXX"
+  userId      String?
+  user        DemoUser? @relation(fields: [userId], references: [id])
+  status      String   // "READY", "CONNECTED", "ACTIVE", "EXPIRED"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model FraudCheck {
+  id             String   @id @default(uuid())
+  messageText    String
+  riskLevel      String   // "LOW", "MEDIUM", "HIGH"
+  confidence     Float    // e.g. 0.95
+  warningSigns   String   // JSON string array of markers
+  explanation    String
+  recommendation String
+  createdAt      DateTime @default(now())
+}
