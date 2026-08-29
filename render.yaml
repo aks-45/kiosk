@@ -1,14 +1,20 @@
 services:
   - type: web
-    name: smart-banking-kiosk
-    env: node
+    name: kiosk-financial-terminal
+    runtime: node
     plan: free
+    region: oregon
     buildCommand: npm install && npm run render-build
-    startCommand: npm run start
+    startCommand: npm start
+    autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: AI_PROVIDER
+        value: gemini
+      - key: DATABASE_URL
+        value: file:./dev.db
       - key: GEMINI_API_KEY
-        sync: false
-      - key: OPENAI_API_KEY
         sync: false

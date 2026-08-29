@@ -1,72 +1,62 @@
-# Deploying Smart Banking Kiosk to Render (render.com)
+# Deploying KIOSK to Render (render.com)
 
-This repository is fully configured for seamless deployment on **Render** as a Node.js Web Service.
-
----
-
-## Quick Deployment via Render Blueprint (Recommended)
-
-1. **Push your code to GitHub / GitLab**:
-   Ensure your repository is committed and pushed to GitHub or GitLab.
-
-2. **Log into Render**:
-   Go to [https://dashboard.render.com](https://dashboard.render.com) and log in.
-
-3. **Create a New Blueprint**:
-   - Click **New +** top right → Select **Blueprint**.
-   - Connect your GitHub repository (`kiosk` or `smart-banking-kiosk`).
-   - Render will automatically detect `render.yaml` in your project root!
-
-4. **Set Environment Variables**:
-   In the Render Dashboard Environment settings for the service, add:
-   - `GEMINI_API_KEY`: *(Optional)* Your Google Gemini API Key.
-   - `OPENAI_API_KEY`: *(Optional)* Your OpenAI API Key (if using OpenAI).
-   - `NEXT_PUBLIC_APP_URL`: Your Render public service URL (e.g. `https://smart-banking-kiosk.onrender.com`).
-
-5. **Deploy**:
-   Click **Apply**. Render will automatically run:
-   - `npm install`
-   - `npx prisma generate`
-   - `npx prisma db push --accept-data-loss`
-   - `npx tsx prisma/seed.ts` (seeds initial demo account `SBK001` & transactions)
-   - `next build`
-   - `next start`
+This repository is ready for deployment on **Render** as a Node.js Web Service with full Gemini Chatbot intelligence.
 
 ---
 
-## Manual Web Service Setup on Render
+## Method 1: Automatic Blueprint Deployment (Recommended)
 
-If you prefer to configure the Web Service manually on Render:
+1. **Log in to Render**:
+   Go to [https://dashboard.render.com](https://dashboard.render.com).
+
+2. **Connect Blueprint**:
+   - Click **New +** (top-right) → Select **Blueprint**.
+   - Connect your GitHub repository: **`https://github.com/aks-45/kiosk`**.
+   - Render will automatically read [`render.yaml`](./render.yaml).
+
+3. **Set your Gemini API Key**:
+   - In the prompt for `GEMINI_API_KEY`, paste your Gemini API key:
+     `AIzaSyDj1qT4KuVVFnYknhUCnNVLVLkCQYKmgdg`
+
+4. **Click Apply**:
+   Render will automatically build and deploy the application.
+
+---
+
+## Method 2: Manual Web Service Setup
+
+If you prefer to configure manually:
 
 1. Click **New +** → **Web Service**.
-2. Connect your GitHub repository.
-3. Configure the following fields:
-   - **Name**: `smart-banking-kiosk`
-   - **Environment**: `Node`
-   - **Region**: Select your preferred region (e.g. Singapore / Oregon / Frankfurt).
-   - **Branch**: `main` (or your active branch).
-   - **Build Command**: 
+2. Connect your GitHub repository **`aks-45/kiosk`**.
+3. Fill in the following settings:
+   - **Name**: `kiosk-terminal`
+   - **Runtime**: `Node`
+   - **Branch**: `main`
+   - **Build Command**:
      ```bash
      npm install && npm run render-build
      ```
-   - **Start Command**: 
+   - **Start Command**:
      ```bash
-     npm run start
+     npm start
      ```
-   - **Instance Type**: `Free` (or standard).
+   - **Instance Type**: `Free`
 
-4. Add **Environment Variables**:
+4. **Environment Variables**:
    | Key | Value |
    |---|---|
    | `NODE_ENV` | `production` |
+   | `NODE_VERSION` | `20.18.0` |
+   | `AI_PROVIDER` | `gemini` |
    | `DATABASE_URL` | `file:./dev.db` |
-   | `GEMINI_API_KEY` | *Your Gemini API Key* |
+   | `GEMINI_API_KEY` | `AIzaSyDj1qT4KuVVFnYknhUCnNVLVLkCQYKmgdg` |
 
 5. Click **Create Web Service**.
 
 ---
 
 ## Verification After Deployment
-Once deployed, open your Render URL (e.g. `https://smart-banking-kiosk.onrender.com`):
-- Click **ACCESS KIOSK TERMINAL** or log in with **Customer ID**: `SBK001`, **PIN**: `1234`.
-- Explore all 6 modules including **`SMART BANKING GUIDE`**.
+Once deployed, open your live Render URL:
+- **Terminal Access**: Log in with Customer PIN `1234` or click Quick Access.
+- **Kiosk Financial AI**: Navigate to `/ai` to test real-time financial intelligence and inline voice-to-text.
